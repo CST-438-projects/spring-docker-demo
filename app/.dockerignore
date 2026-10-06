@@ -1,0 +1,24 @@
+# Keep the build context small and keep local junk out of the image.
+# Anything listed here is invisible to COPY in the Dockerfile.
+
+# Gradle output and caches (the image builds its own)
+build/
+.gradle/
+out/
+
+# IDE files
+.idea/
+*.iml
+.vscode/
+.settings/
+.project
+.classpath
+
+# Version control and OS noise
+.git/
+.gitignore
+.DS_Store
+
+# Never let a local secrets file into an image
+.env
+*.env

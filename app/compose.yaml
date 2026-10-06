@@ -1,0 +1,46 @@
+# Local development stack. `docker compose up --build` builds the image from
+# the Dockerfile in this folder and runs it.
+#
+# Naming: `docker compose` looks for compose.yaml first, then docker-compose.yml.
+# The Project 02 rubric calls the file docker-compose.yml; either name works.
+services:
+  api:
+    build: .
+    image: hello-api:compose
+    ports:
+      - "8080:8080"          # host:container
+    environment:
+      APP_VERSION: compose   # shows up in GET /api/v1/hello
+      # PORT is intentionally NOT set here: the app falls back to 8080.
+
+# --- Project 02: add a local Postgres for development -----------------------
+# Uncomment and adapt. The API reaches the DB at hostname "db" (the service
+# name) on the compose network. Your deployed API still uses the remote DB.
+#
+#   db:
+#     image: postgres:17-alpine
+#     environment:
+#       POSTGRES_DB: appdb
+#       POSTGRES_USER: app
+#       POSTGRES_PASSWORD: app        # dev only; never a real credential
+#     ports:
+#       - "5432:5432"
+#     volumes:
+#       - pgdata:/var/lib/postgresql/data
+#     healthcheck:
+#       test: ["CMD-SHELL", "pg_isready -U app -d appdb"]
+#       interval: 5s
+#       timeout: 3s
+#       retries: 10
+#
+# and under `api:` add
+#     depends_on:
+#       db:
+#         condition: service_healthy
+#     environment:
+#       SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/appdb
+#       SPRING_DATASOURCE_USERNAME: app
+#       SPRING_DATASOURCE_PASSWORD: app
+#
+# volumes:
+#   pgdata:
